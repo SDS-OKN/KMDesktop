@@ -31,7 +31,7 @@ namespace SDSClientAppV1
     {
 
 #if RELEASE
-        public string urlAddress = "http://maps.mvbg.org/agCaller/";
+        public string urlAddress = "<ADD_ADDRESS_TO_SDSOKNSERVICES>";
 #endif
 #if DODEBUG
         public string urlAddress = @"https://localhost:51899/";
@@ -72,31 +72,13 @@ namespace SDSClientAppV1
             dockInformationExplorer.Dock = DockStyle.Fill;
             tabInformationExplorer.Controls.Add(dockInformationExplorer);
             Cef.Initialize(settings);
-            browserClass = new ChromiumWebBrowser("https://maps.mvbg.org/AgDisplay/Home/DisplayNodes");
-            browserEditor = new ChromiumWebBrowser("https://maps.mvbg.org/AgDisplay/Home/DisplayNodes");
-            //browser.JavascriptObjectRepository.ResolveObject += (sender, e) =>
-            //{
-            //    var repo = e.ObjectRepository;
-            //    if (e.ObjectName == "boundAsync")
-            //    {
-            //        BindingOptions bindingOptions = null; //Binding options is an optional param, defaults to null
-            //        bindingOptions = BindingOptions.DefaultBinder; //Use the default binder to serialize values into complex objects, CamelCaseJavascriptNames = true is the default
-            //        //No camelcase of names and specify a default binder
-            //        repo.Register("boundAsync", new BoundObject(), isAsync: true, options: bindingOptions);
-            //    }
-            //};
+            browserClass = new ChromiumWebBrowser(<AddLocationOfDisplayNodesContrller>);// ie "https://maps.mvbg.org/AgDisplay/Home/DisplayNodes"
+            browserEditor = new ChromiumWebBrowser(<AddLocationOfDisplayNodesController>);
+           
 
-            //browser.JavascriptObjectRepository.ObjectBoundInJavascript += (sender, e) =>
-            //{
-            //    var name = e.ObjectName;
-
-            //    Debug.WriteLine($"Object {e.ObjectName} was bound successfully.");
-            //};
-            //splitContainer1.Panel1.Controls.Add(browser);
-            //browser.Dock = DockStyle.Fill;
-            //browser.Refresh();
+            // add SignalR connection to update Node Displays
             connection = new HubConnectionBuilder()
-             .WithUrl("https://maps.mvbg.org/AgDisplay/ChatHub")
+             .WithUrl(<AddLocationOfHub>)
              .Build();
             InitConnection();
             var Initclient = new RestClient(urlAddress + "api/AllegroGraphInstance");
@@ -113,16 +95,17 @@ namespace SDSClientAppV1
             itemToAdd.ID = response1.Content.ToString();
             itemToAdd.ID = itemToAdd.ID.Replace("\"", "");
             itemToAdd.ID = itemToAdd.ID.Trim();
+            // add repository locations
             initID = itemToAdd.ID;
             itemToAdd.Url = "http://45.19.182.17";
             itemToAdd.Port = 10035;
             itemToAdd.Catalog = "Data";
             itemToAdd.Repository = "SDSS";
-            itemToAdd.Name = "super";
-            itemToAdd.Password = "Show4time!";
+            itemToAdd.Name = "xxxx";
+            itemToAdd.Password = "xxxx";
             agInstances.Add(itemToAdd);
             itemToAdd = new AllegroGraphRegistryEntry();
-            Initclient = new RestClient(urlAddress + "api/AllegroGraphInstance/register/super/Show4time!/45.19.182.17/10035/importme/sdsokn");
+            Initclient = new RestClient(urlAddress + "api/AllegroGraphInstance/register/username/password/45.19.182.17/10035/importme/sdsokn");
             response1 = Initclient.Get(request);
             itemToAdd.ID = response1.Content.ToString();
             itemToAdd.ID = itemToAdd.ID.Replace("\"", "");
@@ -131,8 +114,8 @@ namespace SDSClientAppV1
             itemToAdd.Port = 10035;
             itemToAdd.Catalog = "importme";
             itemToAdd.Repository = "sdsokn";
-            itemToAdd.Name = "super";
-            itemToAdd.Password = "Show4time!";
+            itemToAdd.Name = "xxxx";
+            itemToAdd.Password = "xxxxxxx!";
             initID = itemToAdd.ID;
             agInstances.Add(itemToAdd);
             drpOntologySource.Properties.Items.Add("SDSOKN Ontology");
@@ -760,7 +743,6 @@ namespace SDSClientAppV1
 
             List<string> finalItems = new List<string>();
             foreach (string s in columnNames)
-            {
                 if (finalItems.Contains(s) == false)
                 {
                     finalItems.Add(s);
